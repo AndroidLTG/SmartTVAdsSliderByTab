@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">SmartTVTabFinal</string>
+    <string name="action_settings">Settings</string>
+    <string name="open_wifi">Bật internet</string>
+    <string name="reload_wifi">Tải lại</string>
+    <string name="noteOpenWifi">Vui lòng bật kết nối mạng</string>
+    <string name="signin">Đăng ký</string>
+    <string name="nameofdevice">Nhập tên thiết bị</string>
+    <string name="noteofdevice">Nhập ghi chú</string>
+    <string name="codeofcompany">Nhập mã công ty</string>
+    <string name="singup_pls">Thiết bị này chưa được đăng ký, vui lòng điền theo form dưới để đăng kí</string>
+</resources>
