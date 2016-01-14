@@ -2,12 +2,98 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/txtSettingTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|center_vertical"
+        android:paddingTop="20dp"
+        android:text="@string/infoDevice"
+        android:textColor="@android:color/white"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/lineinfo"
+        android:layout_below="@+id/txtSettingTitle"
+        android:padding="10dp"
+        android:background="@drawable/bolder_linerlayout"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:layout_centerHorizontal="true"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/btnSetting">
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:weightSum="3"
+            android:orientation="vertical"
+            android:layout_height="match_parent">
+            <TextView
+                android:text="@string/namedevice"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="0dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:text="@string/time_using"
+                android:layout_weight="1"
+                android:layout_height="0dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:text="@string/codecompany"
+                android:layout_weight="1"
+                android:layout_height="0dp"  />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:weightSum="3"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/txtNameDevice"
+                android:layout_width="match_parent"
+                android:text="@string/namedevice"
+                android:textColor="@color/colorYellow"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:layout_height="0dp" />
+            <TextView
+                android:id="@+id/txtTimeUsing"
+                android:textColor="@color/colorYellow"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:text="@string/time_using"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="0dp" />
+            <TextView
+                android:id="@+id/txtCompanyCode"
+                android:textColor="@color/colorYellow"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:text="@string/codecompany"
+                android:layout_weight="1"
+                android:layout_height="0dp" />
+        </LinearLayout>
+
+    </LinearLayout>
     <Button
         android:layout_width="wrap_content"
         android:id="@+id/btnSetting"
         android:drawableLeft="@drawable/setting_btn"
-        android:text="@string/open_wifi"
+        android:text="@string/reload_wifi"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 </RelativeLayout>

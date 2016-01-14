@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.stanstudios.smarttvtabfinal.Activity.MainActivity;
 import com.stanstudios.smarttvtabfinal.LoadAds.MyMethod;
@@ -39,6 +40,15 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
 
     private void getId(View v) {
         MainActivity.btnSetting = (Button) v.findViewById(R.id.btnSetting);
+        MainActivity.txtSettingTitle = (TextView) v.findViewById(R.id.txtSettingTitle);
+        MainActivity.txtNameDevice = ((TextView) v.findViewById(R.id.txtNameDevice));
+        MainActivity.txtNameDevice.setTypeface(MainActivity.font);
+        MainActivity.txtTimeUsing =
+                ((TextView) v.findViewById(R.id.txtTimeUsing));
+        MainActivity.txtTimeUsing.setTypeface(MainActivity.font);
+        MainActivity.txtCompany = ((TextView) v.findViewById(R.id.txtCompanyCode));
+        MainActivity.txtCompany.setTypeface(MainActivity.font);
+        MainActivity.btnSetting.setTypeface(MainActivity.font);
         MainActivity.btnSetting.setOnClickListener(this);
     }
 
@@ -48,15 +58,14 @@ public class SettingFragment extends Fragment implements View.OnClickListener {
             case R.id.btnSetting:
                 switch (MainActivity.btnSetting.getText().toString()) {
                     case "Bật internet":
-
                         startActivityForResult(new Intent(Settings.ACTION_WIFI_SETTINGS), OPENWIFI);
                         break;
                     case "Tải lại":
                         MainActivity.loadData();
 
-                            break;
+                        break;
                     case "Đăng ký":
-                        MyMethod.showToast(getContext(),"Đăng kí");
+                        MyMethod.showToast(getContext(), "Đăng kí");
                         break;
 
                 }

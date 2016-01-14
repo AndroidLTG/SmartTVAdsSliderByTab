@@ -9,4 +9,22 @@
     <string name="noteofdevice">Nhập ghi chú</string>
     <string name="codeofcompany">Nhập mã công ty</string>
     <string name="singup_pls">Thiết bị này chưa được đăng ký, vui lòng điền theo form dưới để đăng kí</string>
+    <string name="namedevice">Tên thiết bị</string>
+    <string name="time_using">Thời gian sử dụng (ngày)</string>
+    <string name="timeofusing">Nhập thời gian sử dụng</string>
+    <string name="codecompany">Mã công ty</string>
+    <string name="singup">Đăng kí</string>
+    <string name="signup_success">Đăng kí thành công, bạn có 3 ngày sử dụng thử, liên hệ với VietDMS để được kích hoạt</string>
+    <string name="signup_fail">Đăng kí lỗi, vui lòng thử lại</string>
+    <string name="success">SUCCESS</string>
+    <string name="signup_fail_duplicate">Violation of PRIMARY KEY constraint</string>
+    <string name="signup_fail_duplicate_vn">Thiết bị đã được đăng ký vui lòng kiểm tra phân quyền quảng cáo trên hệ thống</string>
+    <string name="request_fail_not_sign">Column1</string>
+    <string name="request_fail_not_permision">{\"Table\":[],\"Table1\"</string>
+    <string name="device_not_sign">Thiết bị chưa đăng ký</string>
+    <string name="device_not_permision">Không có quảng cáo nào có sẵn</string>
+    <string name="signup_fail_companycode">FK_Add_Client_Add_Company</string>
+    <string name="signup_fail_companycode_vn">Nhập sai mã công ty</string>
+    <string name="connect_lost">Không có kết nối mạng</string>
+    <string name="infoDevice">Thông tin thiết bị</string>
 </resources>

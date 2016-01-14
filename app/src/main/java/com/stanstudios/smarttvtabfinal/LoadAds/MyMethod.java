@@ -25,19 +25,21 @@ import java.util.HashMap;
 public class MyMethod {
     public static final String NAMESPACE = "http://tempuri.org/";
     public static final String METHOD_NAME_REQUESTDEVICE = "AddTV_RequestAds";
+    public static final String METHOD_NAME_SIGNUPDEVICE = "AddTV_SignUp";
     public static final String URL = "http://indico.vn:8101/mywebservice.asmx?WSDL";
     public static final String SOAP_ACTION_REQUESTDEVICE = "http://tempuri.org/AddTV_RequestAds";
-    public static final String TYPE_VIDEO = "VIDEO";
-    public static final String TYPE_IMAGE = "PC";
-    public static final String TYPE_WEB = "WEB";
-    public static final String TYPE_ADS = "QC";
+    public static final String SOAP_ACTION_SIGNUPDEVICE = "http://tempuri.org/AddTV_SignUp";
+    public static final int TYPE_VIDEO = 1;
+    public static final int TYPE_IMAGE = 2;
+    public static final int TYPE_WEB = 3;
+    public static final int TYPE_ADS = 4;
     public static final String MYTAG = "LTG";
     public static HashMap<Integer, String> LINKWEB = new HashMap<>();
     public static HashMap<Integer, Float> VOLUME = new HashMap<>();
-    public static HashMap<Integer, Float> DURATION = new HashMap<>();
+    public static HashMap<Integer, String> NAME = new HashMap<>();
     public static HashMap<Integer, Integer> POSITIONWEB = new HashMap<>();
     public static int QC = 0;
-    public static String DEVICEID = "tientest";
+    public static String DEVICEID = "";
 
     public static void createFolder(String foldername) {
         File folder = new File(Environment.getExternalStorageDirectory() +
@@ -69,7 +71,7 @@ public class MyMethod {
         mProgressDialog.setMessage("Đang quét thiết bị");
         mProgressDialog.setIndeterminate(true);
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        mProgressDialog.setCancelable(true);
+        mProgressDialog.setCancelable(false);
         final DownloadTask downloadTask = new DownloadTask(context, folder, mProgressDialog);
         final RequestTask requestTask = new RequestTask(arrAds, downloadTask, context, deviceId);
         requestTask.execute();
@@ -82,8 +84,8 @@ public class MyMethod {
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
-
     public static void loadImage(ImageView imageView, String folderName, String fileName) {
+
         try {
             String uriPath = Environment.getExternalStorageDirectory() + "/" + folderName + "/" + fileName;
             Bitmap bmp = BitmapFactory.decodeFile(uriPath);

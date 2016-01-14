@@ -3,6 +3,9 @@ package com.stanstudios.smarttvtabfinal.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -15,10 +18,10 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 import com.stanstudios.smarttvtabfinal.Adapter.ViewPagerAdapter;
-import com.stanstudios.smarttvtabfinal.AlarmManager.HelloTime;
 import com.stanstudios.smarttvtabfinal.Fragment.AdsFragment;
 import com.stanstudios.smarttvtabfinal.Fragment.ImageViewFragment;
 import com.stanstudios.smarttvtabfinal.Fragment.SettingFragment;
@@ -32,19 +35,21 @@ import com.stanstudios.smarttvtabfinal.R;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int TYPE_SETTING = 0;
-    private static final int TYPE_SIGNUP = 1;
-    private static final int TYPE_VIDEO = 2;
-    private static final int TYPE_IMAGEVIEW = 3;
-    private static final int TYPE_WEBVIEW = 4;
-    private static final int TYPE_ADS = 5;
+    public static final int TYPE_SETTING = 0;
+    public static final int TYPE_SIGNUP = 1;
+    public static final int TYPE_VIDEO = 2;
+    public static final int TYPE_IMAGEVIEW = 3;
+    public static final int TYPE_WEBVIEW = 4;
+    public static final int TYPE_ADS = 5;
     public static VideoView videoView;
     public static ImageView imageView;
     public static WebView webView;
     public static ViewPager viewPager;
     public static String FOLDER = "SmartTVAds";
     public static Button btnSetting;
+    public static TextView txtSettingTitle, txtNameDevice, txtTimeUsing, txtCompany;
     public static ArrayList<Ads> arrAds = new ArrayList<>();
+    public static Typeface font;
     private static Context context;
     private static ProgressDialog mProgressDialog;
     private static Handler handler;
@@ -52,13 +57,11 @@ public class MainActivity extends AppCompatActivity {
     private static java.lang.Runnable runnable;
     protected PowerManager.WakeLock mWakeLock;
     private TabLayout tabLayout;
-    private HelloTime helloTime;
 
     public static void loadData() {
         MyMethod.createFolder(FOLDER);
-        if (MyMethod.isOnline(context)) {
-            MyMethod.requestDevice(arrAds, context, mProgressDialog, MyMethod.DEVICEID, FOLDER);
-        } else viewPager.setCurrentItem(TYPE_SETTING);
+        loadRequest();
+
         mProgressDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
@@ -66,41 +69,63 @@ public class MainActivity extends AppCompatActivity {
                 runnable = new Runnable() {
                     @Override
                     public void run() {
-                        switch (arrAds.get(count).getType()) {
-                            case MyMethod.TYPE_VIDEO:
-                                viewPager.setCurrentItem(TYPE_VIDEO);
-                                MyMethod.loadVideo(videoView, MainActivity.FOLDER, "File1.mp4", MyMethod.VOLUME.get(1));
-                                break;
-                            case MyMethod.TYPE_IMAGE:
-                                viewPager.setCurrentItem(TYPE_IMAGEVIEW);
-                                MyMethod.loadImage(imageView, MainActivity.FOLDER, "File2.jpg");
-                                break;
-                            case MyMethod.TYPE_WEB:
-                                viewPager.setCurrentItem(TYPE_WEBVIEW);
-                                MyMethod.loadWebview(webView, MyMethod.POSITIONWEB.get(3), MyMethod.LINKWEB.get(3));
-                                break;
-                            case MyMethod.TYPE_ADS:
-                                viewPager.setCurrentItem(TYPE_ADS);
-                                break;
-                            default:
-                                break;
+                        if (count != -1) {
+                            count++;
+                            switch (arrAds.get(count - 1).getType()) {
+                                case MyMethod.TYPE_VIDEO:
+                                    viewPager.setCurrentItem(TYPE_VIDEO);
+                                    MyMethod.loadVideo(videoView, MainActivity.FOLDER, MyMethod.NAME.get(arrAds.get(count - 1).getSerial()) + arrAds.get(count - 1).getExtension(), MyMethod.VOLUME.get(arrAds.get(count - 1).getSerial()));
+                                    break;
+                                case MyMethod.TYPE_IMAGE:
+                                    viewPager.setCurrentItem(TYPE_IMAGEVIEW);
+                                    MyMethod.loadImage(imageView, MainActivity.FOLDER, MyMethod.NAME.get(arrAds.get(count - 1).getSerial()) + arrAds.get(count - 1).getExtension());
+                                    break;
+                                case MyMethod.TYPE_WEB:
+                                    viewPager.setCurrentItem(TYPE_WEBVIEW);
+                                    MyMethod.loadWebview(webView, MyMethod.POSITIONWEB.get(arrAds.get(count - 1).getSerial()), MyMethod.LINKWEB.get(arrAds.get(count - 1).getSerial()));
+                                    break;
+                                case MyMethod.TYPE_ADS:
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            MyMethod.QC++;
+                            if (count == arrAds.size()) {
+                                count = -1;
+                                handler.postDelayed(this, 1000 * (long) arrAds.get(arrAds.size() - 1).getDuration());
+                                Log.w(arrAds.get(arrAds.size() - 1).getType() + " là cái cuối:", arrAds.get(arrAds.size() - 1).getDuration() + "s");
+                            } else {
+                                Log.w(arrAds.get(count - 1).getType() + "Chạy trong :", arrAds.get(count - 1).getDuration() + "s");
+                                handler.postDelayed(this, 1000 * (long) arrAds.get(count - 1).getDuration()); // 1000 means 1 second duration
+                            }
+                        } else {
+                            viewPager.setCurrentItem(TYPE_SETTING);
+                            loadRequest();
                         }
-                        count++;
-                        MyMethod.QC++;
-                        if (count == arrAds.size()) {
-                            count = 0;
-                            handler.postDelayed(this, 1000 * (long) arrAds.get(count).getDuration());
-                        } else
-                            handler.postDelayed(this, 1000 * (long) arrAds.get(count - 1).getDuration()); // 1000 means 1 second duration
+
                     }
                 };
-                handler.postDelayed(runnable, 180); // 180 is the delay after new runnable is going to called
-
+                handler.postDelayed(runnable, 1); // 180 is the delay after new runnable is going to called
             }
 
         });
 
 
+    }
+
+    private static void loadRequest() {
+        count = 0;
+        if (MyMethod.isOnline(context)) {
+            WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+            WifiInfo wInfo = wifiManager.getConnectionInfo();
+            MyMethod.DEVICEID = wInfo.getMacAddress().replace(":", "");
+            MyMethod.requestDevice(arrAds, context, mProgressDialog, MyMethod.DEVICEID, FOLDER);
+        } else {
+            viewPager.setCurrentItem(TYPE_SETTING);
+            txtSettingTitle.setText(context.getString(R.string.connect_lost));
+
+        }
     }
 
     @Override
@@ -155,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getId() {
         context = getApplicationContext();
+        font = Typeface.createFromAsset(context.getAssets(), "font.ttf");
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         mProgressDialog = new ProgressDialog(MainActivity.this);
@@ -162,17 +188,17 @@ public class MainActivity extends AppCompatActivity {
         this.mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, MyMethod.MYTAG);
         this.mWakeLock.acquire();
         handler = new Handler();
-        helloTime = new HelloTime();
-        if (helloTime != null) {
-            helloTime.SetAlarm(getApplicationContext());
-        } else {
-            MyMethod.showToast(context, "Lỗi: alarm bị null");
-        }
+//        helloTime = new HelloTime();
+//        if (helloTime != null) {
+//            helloTime.SetAlarm(getApplicationContext());
+//        } else {
+//            MyMethod.showToast(context, "Lỗi: alarm bị null");
+//        }
     }
 
     @Override
     protected void onDestroy() {
-        helloTime.CancelAlarm(context);
+       // helloTime.CancelAlarm(context);
         super.onDestroy();
     }
 

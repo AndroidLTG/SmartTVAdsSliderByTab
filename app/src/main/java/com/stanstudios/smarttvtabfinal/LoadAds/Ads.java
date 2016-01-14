@@ -7,10 +7,19 @@ public class Ads {
     private String url;
     private String backupUrl;
     private float volume;
-    private String type;
+    private int type;
     private String extension;
     private float duration;
     private String startDate;
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getStartDate() {
         return startDate;
@@ -46,11 +55,11 @@ public class Ads {
         this.url = url;
     }
 
-    public String getType() {
+    public int getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(int type) {
         this.type = type;
     }
 

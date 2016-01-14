@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.PowerManager;
-import android.widget.Toast;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -38,37 +37,37 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
         HttpURLConnection connection = null;
         try {
             noOfURLs = sUrl.length;
+            String arrTemp = "";
             for (int i = 0; i < sUrl.length; i++) {
-                URL url = new URL(sUrl[i]);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
-                // expect HTTP 200 OK, so we don't mistakenly save error report
-                // instead of the file
-                if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                    return "Máy chủ trả về HTTP " + connection.getResponseCode()
-                            + " " + connection.getResponseMessage();
-                }
-                // this will be useful to display download percentage
-                // might be -1: server did not report the length
-                int fileLength = connection.getContentLength();
-                // download the file
-                input = connection.getInputStream();
-                output = new FileOutputStream(Environment.getExternalStorageDirectory() + "/" + folder + "/File" + (i + 1) + "." + sUrl[i].charAt(sUrl[i].length() - 3) + sUrl[i].charAt(sUrl[i].length() - 2) + sUrl[i].charAt(sUrl[i].length() - 1));
-                byte data[] = new byte[4096];
-                long total = 0;
-                int count;
-                while ((count = input.read(data)) != -1) {
-                    // allow canceling with back button
-                    if (isCancelled()) {
-                        input.close();
-                        return null;
+                if (sUrl[i] != null && !arrTemp.contains(sUrl[i])) {
+                    arrTemp += sUrl[i] + "|";
+                    URL url = new URL(sUrl[i]);
+                    connection = (HttpURLConnection) url.openConnection();
+                    connection.connect();
+                    if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                        return "Máy chủ trả về HTTP " + connection.getResponseCode()
+                                + " " + connection.getResponseMessage();
                     }
-                    total += count;
-                    // publishing the progress....
-                    if (fileLength > 0) // only if total length is known
-                        publishProgress((int) (total * 100 / fileLength));
-                    output.write(data, 0, count);
+                    int fileLength = connection.getContentLength();
+                    // download the file
+                    input = connection.getInputStream();
+                    output = new FileOutputStream(Environment.getExternalStorageDirectory() + "/" + folder + "/" + MyMethod.NAME.get(i + 1) + "." + sUrl[i].charAt(sUrl[i].length() - 3) + sUrl[i].charAt(sUrl[i].length() - 2) + sUrl[i].charAt(sUrl[i].length() - 1));
+                    byte data[] = new byte[4096];
+                    long total = 0;
+                    int count;
+                    while ((count = input.read(data)) != -1) {
+                        // allow canceling with back button
+                        if (isCancelled()) {
+                            input.close();
+                            return null;
+                        }
+                        total += count;
+                        // publishing the progress....
+                        if (fileLength > 0) // only if total length is known
+                            publishProgress((int) (total * 100 / fileLength));
+                        output.write(data, 0, count);
 
+                    }
                 }
                 noUrlLoad++;
             }
